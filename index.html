@@ -197,6 +197,18 @@
             padding: 15px; border-radius: 15px; margin-top: 20px; 
             text-align: center;
         }
+
+        /* WIDGET TÌM MATCHING NỔI GÓC TRÁI */
+        #matchWidget {
+            position: fixed; bottom: 30px; left: 110px; /* Tránh cái sidebar */
+            background: rgba(20, 20, 35, 0.95); border: 2px solid var(--primary);
+            border-radius: 15px; padding: 15px 20px; display: none; align-items: center; gap: 15px;
+            box-shadow: 0 0 20px rgba(255, 158, 181, 0.4); z-index: 9999; backdrop-filter: blur(10px);
+        }
+        .widget-spinner { font-size: 24px; color: var(--primary); animation: fa-spin 2s linear infinite; }
+        .widget-text { font-family: 'VT323'; font-size: 20px; line-height: 1.2; }
+        .widget-cancel { background: #e74c3c; border: none; color: white; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .widget-cancel:hover { background: #c0392b; transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -280,12 +292,19 @@
                         </div>
                     </div>
 
-                    <div class="panel">
-                        <h3><i class="fas fa-tasks"></i> Nhiệm vụ (Daily Tasks)</h3>
-                        <div style="margin-top: 20px;">
-                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" style="transform: scale(1.5);">
-                                <span>Học 2 tiếng liên tục (+50 <i class="fas fa-heart"></i>)</span>
+                    <div style="display: flex; flex-direction: column; gap: 30px;">
+                        <div class="panel" style="padding: 0; overflow: hidden; position: relative; aspect-ratio: 16/9; margin-bottom: 0;">
+                            <iframe id="soloVideoFrame" src="" style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media"></iframe>
+                            <span style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 8px; z-index: 6; font-size: 12px;"><i class="fas fa-user"></i> Virtual Partner</span>
+                        </div>
+
+                        <div class="panel" style="margin-bottom: 0;">
+                            <h3><i class="fas fa-tasks"></i> Nhiệm vụ (Daily Tasks)</h3>
+                            <div style="margin-top: 20px;">
+                                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" style="transform: scale(1.5);">
+                                    <span>Học 2 tiếng liên tục (+50 <i class="fas fa-heart"></i>)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -445,7 +464,7 @@
 
                     <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
 
-                    <h3 style="color: var(--pen); margin-bottom: 15px;">🎯 Mục tiêu sắp tới của cậu là gì? (Tích chọn để tìm Team nhé)</h3>
+                    <h3 style="color: var(--pen); margin-bottom: 15px;">🎯 Mục tiêu sắp tới của cậu là gì? (Chọn bao nhiêu cũng được nhé)</h3>
                     <div style="display: flex; gap: 20px; margin-bottom: 25px;">
                         <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;"><input type="checkbox" id="chk-sat" onchange="toggleExam('box-sat', this)" style="transform: scale(1.5);"> SAT</label>
                         <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;"><input type="checkbox" id="chk-ielts" onchange="toggleExam('box-ielts', this)" style="transform: scale(1.5);"> IELTS</label>
@@ -518,7 +537,7 @@
                         </div>
                     </div>
 
-                    <button class="buy-btn" onclick="saveProfile()" style="margin-top: 20px; font-size: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2);">LƯU PROFILE</button>
+                    <button class="buy-btn" onclick="saveProfile()" style="margin-top: 20px; font-size: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2);">LƯU PROFILE & TÌM ĐỒNG ĐỘI 🚀</button>
                 </div>
             </div>
 
@@ -546,6 +565,15 @@
             <div class="music-body" id="musicBody">
                 <iframe id="musicFrame" width="100%" height="150" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0" allow="autoplay"></iframe>
             </div>
+        </div>
+
+        <div id="matchWidget">
+            <i class="fas fa-circle-notch widget-spinner"></i>
+            <div>
+                <div class="widget-text" style="color: var(--primary);">ĐANG TÌM ĐỒNG ĐỘI...</div>
+                <div id="widgetStatus" style="font-size: 12px; color: #aaa;">Đang đưa vào hàng chờ...</div>
+            </div>
+            <button class="widget-cancel" onclick="cancelMatch()">HỦY</button>
         </div>
 
     </div>
@@ -589,14 +617,6 @@
         </div>
     </div>
 
-    <div id="loadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000;">
-        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white;">
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 50px; color: var(--primary);"></i>
-            <h3 style="margin-top:20px; font-family: 'VT323'; font-size: 30px;">ĐANG TÌM ĐỒNG ĐỘI...</h3>
-            <p id="loadingText">Đang đưa vào hàng chờ hệ thống...</p>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -617,6 +637,11 @@
             const videos = ['9kzE8isXlQY','l-2hOKIrIyI','vCTRNKPJr40','dCQ8GYqVKdc'];
             changeBg(videos[Math.floor(Math.random() * videos.length)]);
             updateTimerUI();
+
+            // Nhúng ngẫu nhiên 1 video ảo vào Solo Screen cho bớt cô đơn
+            const partnerVids = ['Hpfl1iNOd48', '-GcDrDeth1E', 'ctqo0WLzgoM', 'ADB-tGLvmB8', '1ziSDBlK5lY'];
+            const randomVid = partnerVids[Math.floor(Math.random() * partnerVids.length)];
+            document.getElementById('soloVideoFrame').src = `https://www.youtube.com/embed/${randomVid}?autoplay=1&mute=1&controls=0&loop=1&playlist=${randomVid}&showinfo=0&rel=0`;
 
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
@@ -850,9 +875,16 @@
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) { alert("Cậu cần Đăng nhập để tìm đồng đội!"); return; }
 
+            // Dọn dẹp hàng chờ cũ nếu có
+            if (matchInterval) {
+                clearInterval(matchInterval);
+                if(myQueueId) await supabaseClient.from('match_queue').delete().eq('id', myQueueId);
+            }
+
             document.getElementById('filterModal').style.display='none';
-            document.getElementById('loadingOverlay').style.display='block';
-            document.getElementById('loadingText').innerText = "Đang đưa vào hàng chờ hệ thống...";
+            // Hiển thị Widget nổi góc màn hình thay vì overlay đen thui
+            document.getElementById('matchWidget').style.display='flex';
+            document.getElementById('widgetStatus').innerText = "Đang đưa vào hàng chờ hệ thống...";
 
             const { data, error } = await supabaseClient.from('match_queue').insert([{
                 user_id: user.id,
@@ -864,7 +896,7 @@
 
             if (error) { 
                 alert("Lỗi server: " + error.message); 
-                document.getElementById('loadingOverlay').style.display='none';
+                document.getElementById('matchWidget').style.display='none';
                 return; 
             }
             
@@ -894,14 +926,14 @@
             let validCandidates = [];
 
             if (!isRelax) {
-                document.getElementById('loadingText').innerText = `Đang tìm đúng Team ${size} người thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
+                document.getElementById('widgetStatus').innerText = `Đang tìm đúng Team ${size} người thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
                 validCandidates = waiters.filter(w => w.team_size === size);
                 
                 if (validCandidates.length >= size) {
                     executeMatch(exam, validCandidates.slice(0, size));
                 }
             } else {
-                document.getElementById('loadingText').innerText = `[Relax] Đang vơ vét đồng đội thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
+                document.getElementById('widgetStatus').innerText = `[Relax] Đang vơ vét đồng đội thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
                 validCandidates = waiters; 
 
                 if (validCandidates.length >= 2) {
@@ -926,7 +958,7 @@
         }
 
         function enterRoom(subject, roomId) {
-            document.getElementById('loadingOverlay').style.display='none';
+            document.getElementById('matchWidget').style.display='none';
             document.getElementById('lobby').classList.remove('active');
             document.getElementById('team').classList.add('active');
             document.getElementById('teamNav').style.display = 'flex';
@@ -937,6 +969,15 @@
             const box = document.getElementById('teamChatBox');
             box.innerHTML += `<p style="color: #2ecc71; font-size: 13px; margin-top:5px;"><b>System:</b> Đã kết nối phòng ${subject} thành công! Mọi người đã có thể bật Mic/Cam nhé.</p>`;
             box.scrollTop = box.scrollHeight;
+        }
+
+        async function cancelMatch() {
+            clearInterval(matchInterval);
+            document.getElementById('matchWidget').style.display = 'none';
+            if (myQueueId) {
+                await supabaseClient.from('match_queue').delete().eq('id', myQueueId);
+            }
+            alert("Đã hủy tìm kiếm đồng đội.");
         }
 
         function updateTeamUI(roomId) {
@@ -956,7 +997,6 @@
         }
 
         function leaveRoom() {
-            // Khi rời phòng, xóa sạch iframe đi để ngắt kết nối Camera/Mic của MiroTalk
             document.getElementById('videoGrid').innerHTML = '';
             document.getElementById('teamNav').style.display = 'none';
             showScreen('lobby');
