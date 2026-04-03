@@ -500,7 +500,7 @@
                             <div style="width: 180px; height: 180px; border-radius: 50%; overflow: hidden; border: 4px solid var(--primary); margin: 0 auto 15px auto; box-shadow: 0 0 20px var(--primary);">
                                 <img id="p-avatar-preview" src="https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
-                            <input id="p-avatar" class="login-input" placeholder="Dán link ảnh Avatar vào đây..." oninput="updateAvatarPreview()" style="font-size: 12px; padding: 10px;">
+                            <input type="file" id="p-avatar" accept="image/*" class="login-input" onchange="updateAvatarPreview()" style="font-size: 12px; padding: 10px; cursor: pointer; background: rgba(255,255,255,0.1);">
                         </div>
 
                         <div>
@@ -741,7 +741,6 @@
         const supabaseUrl = 'https://veerprklxlvairtrgzfw.supabase.co';
         const supabaseKey = 'sb_publishable_NqCpdzjrLhEDHz8poYKptw_s3WXIXY8';
         
-        // SỬA LỖI Ở ĐÂY: Đổi tên biến thành supabaseClient để không trùng với thư viện gốc
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         const API_KEY = "AIzaSyBktP5Z8QTHM8Si-NopotNl3DAZ_bW0NK4"; 
@@ -818,7 +817,7 @@
             document.getElementById(boxId).style.display = checkbox.checked ? 'block' : 'none';
         }
 
-        // --- HÀM LƯU HỒ SƠ LÊN SUPABASE ---
+        // --- SỬA CHỖ NÀY ĐỂ UPLOAD ẢNH ---
         async function saveProfile() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) { 
@@ -826,9 +825,34 @@
                 return; 
             }
 
+            let avatarUrlToSave = document.getElementById('p-avatar-preview').src;
+            const fileInput = document.getElementById('p-avatar');
+
+            // Xử lý upload ảnh nếu người dùng chọn file mới
+            if (fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+
+                const { error: uploadError } = await supabaseClient.storage
+                    .from('avatars')
+                    .upload(fileName, file);
+
+                if (uploadError) {
+                    alert("Lỗi up ảnh: " + uploadError.message);
+                    return;
+                }
+
+                const { data: publicUrlData } = supabaseClient.storage
+                    .from('avatars')
+                    .getPublicUrl(fileName);
+                    
+                avatarUrlToSave = publicUrlData.publicUrl;
+            }
+
             const profileData = {
                 id: user.id,
-                avatar: document.getElementById('p-avatar').value,
+                avatar: avatarUrlToSave,
                 name: document.getElementById('p-name').value,
                 gender: document.getElementById('p-gender').value,
                 school: document.getElementById('p-school').value,
@@ -875,13 +899,16 @@
             const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
 
             if (data) {
-                document.getElementById('p-avatar').value = data.avatar || "";
+                // Không gán data.avatar cho value của thẻ input file nữa
                 document.getElementById('p-name').value = data.name || "";
                 document.getElementById('p-gender').value = data.gender || "";
                 document.getElementById('p-school').value = data.school || "";
                 document.getElementById('p-region').value = data.region || "";
                 document.getElementById('p-time').value = data.online_time || "";
-                if(data.avatar) document.getElementById('p-avatar-preview').src = data.avatar;
+                
+                if(data.avatar) {
+                    document.getElementById('p-avatar-preview').src = data.avatar;
+                }
 
                 document.getElementById('chk-sat').checked = data.has_sat || false;
                 document.getElementById('chk-ielts').checked = data.has_ielts || false;
@@ -924,9 +951,16 @@
             if(id === 'profile') document.querySelectorAll('.nav-item')[0].classList.add('active');
         }
 
+        // SỬA HÀM PREVIEW ĐỂ ĐỌC FILE TỪ MÁY
         function updateAvatarPreview() {
-            const url = document.getElementById('p-avatar').value;
-            if(url) document.getElementById('p-avatar-preview').src = url;
+            const fileInput = document.getElementById('p-avatar');
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('p-avatar-preview').src = e.target.result;
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
         }
 
         let timerInterval;
@@ -1279,4 +1313,3 @@
     </script>
 </body>
 </html>
-
