@@ -727,23 +727,32 @@
     </div>
 
     <div id="loadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000;">
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white;">
+            <i class="fas fa-circle-notch fa-spin" style="font-size: 50px; color: var(--primary);"></i>
+            <h3 style="margin-top:20px; font-family: 'VT323'; font-size: 30px;">ĐANG TÌM ĐỒNG ĐỘI...</h3>
+            <p id="loadingText">Quét dữ liệu FTU...</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // 2. Cấu hình kết nối (Dùng biến supabaseClient để tránh trùng tên thư viện)
+        // ✅ CẤU HÌNH KẾT NỐI SUPABASE
         const supabaseUrl = 'https://veerprklxlvairtrgzfw.supabase.co';
         const supabaseKey = 'sb_publishable_NqCpdzjrLhEDHz8poYKptw_s3WXIXY8';
+        
+        // SỬA LỖI Ở ĐÂY: Đổi tên biến thành supabaseClient để không trùng với thư viện gốc
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         const API_KEY = "AIzaSyBktP5Z8QTHM8Si-NopotNl3DAZ_bW0NK4"; 
 
-        // --- TRẠNG THÁI HỆ THỐNG ---
+        // --- CẤU HÌNH & TRẠNG THÁI ---
         let isPremium = false; 
         let spoints = 999999;
         let pennies = 999999;
         let currentBet = 0; 
         
-        // --- TỰ ĐỘNG CHẠY KHI MỞ TRANG ---
+        // --- INIT & KIỂM TRA PHIÊN ĐĂNG NHẬP ---
         window.onload = async function() {
             const videos = ['9kzE8isXlQY','l-2hOKIrIyI','vCTRNKPJr40','dCQ8GYqVKdc'];
             changeBg(videos[Math.floor(Math.random() * videos.length)]);
@@ -757,74 +766,162 @@
             }
         };
 
-        // --- CHỨC NĂNG ĐĂNG KÝ ---
+        // --- CHỨC NĂNG ĐĂNG KÝ (SUPABASE) ---
         async function dangKySupabase() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
-            if(!email || !password) { alert("Cậu nhập đủ Email và Pass nhé!"); return; }
 
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) alert("Lỗi: " + error.message);
-            else alert("Đăng ký thành công! Giờ hãy bấm ĐĂNG NHẬP nha.");
+            if(!email || !password) {
+                alert("Vui lòng nhập đủ Email và Mật khẩu nhé!");
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert("Lỗi đăng ký: " + error.message);
+            } else {
+                alert("Đăng ký thành công! Hãy bấm nút ĐĂNG NHẬP để vào sảnh nhé.");
+            }
         }
 
-        // --- CHỨC NĂNG ĐĂNG NHẬP ---
+        // --- CHỨC NĂNG ĐĂNG NHẬP (SUPABASE) ---
         async function dangNhapSupabase() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
-            if(!email || !password) { alert("Nhập đủ thông tin cậu ơi!"); return; }
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) alert("Sai thông tin rồi cậu!");
-            else {
+            if(!email || !password) {
+                alert("Vui lòng nhập đủ Email và Mật khẩu!");
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                alert("Sai Email hoặc Mật khẩu rồi!");
+            } else {
                 document.getElementById('loginPage').style.display='none'; 
                 document.getElementById('mainApp').style.display='flex'; 
-                alert("Chào mừng cậu trở lại!");
+                alert("Chào mừng đến với StudyCrush!");
                 loadProfile();
             }
         }
 
-        // --- LƯU PROFILE ---
+        // --- HÀM ẨN/HIỆN CHECKBOX KỲ THI ---
+        function toggleExam(boxId, checkbox) {
+            document.getElementById(boxId).style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        // --- HÀM LƯU HỒ SƠ LÊN SUPABASE ---
         async function saveProfile() {
             const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) { alert("Cậu chưa đăng nhập mà!"); return; }
+            if (!user) { 
+                alert("Nhớ Đăng nhập trước khi lưu profile nha!"); 
+                return; 
+            }
 
             const profileData = {
                 id: user.id,
-                name: document.getElementById('p-name').value,
                 avatar: document.getElementById('p-avatar').value,
+                name: document.getElementById('p-name').value,
+                gender: document.getElementById('p-gender').value,
                 school: document.getElementById('p-school').value,
-                // ... cậu có thể thêm các trường khác ở đây
+                region: document.getElementById('p-region').value,
+                online_time: document.getElementById('p-time').value,
+                
+                has_sat: document.getElementById('chk-sat').checked,
+                has_ielts: document.getElementById('chk-ielts').checked,
+                has_hsa: document.getElementById('chk-hsa').checked,
+                has_thpt: document.getElementById('chk-thpt').checked,
+
+                sat_target: document.getElementById('sat-target').value,
+                sat_math: document.getElementById('sat-math').value,
+                sat_verbal: document.getElementById('sat-verbal').value,
+
+                ielts_curr: document.getElementById('ielts-curr').value,
+                ielts_target: document.getElementById('ielts-target').value,
+                ielts_strong: document.getElementById('ielts-strong').value,
+                ielts_weak: document.getElementById('ielts-weak').value,
+
+                hsa_track: document.getElementById('hsa-track').value,
+                hsa_target: document.getElementById('hsa-target').value,
+                hsa_commit: document.getElementById('hsa-commit').value,
+                hsa_strong: document.getElementById('hsa-strong').value,
+                hsa_weak: document.getElementById('hsa-weak').value,
+
+                thpt_combo: document.getElementById('thpt-combo').value,
+                thpt_commit: document.getElementById('thpt-commit').value
             };
 
             const { error } = await supabaseClient.from('profiles').upsert(profileData);
-            if (error) alert("Lỗi lưu dữ liệu: " + error.message);
-            else alert("Đã lưu Profile thành công! 🚀");
+            if (error) {
+                alert("Có lỗi khi lưu: " + error.message);
+            } else {
+                alert("Profile đã được lưu an toàn! 🎉");
+            }
         }
 
-        // --- TẢI PROFILE ---
+        // --- HÀM TẢI HỒ SƠ TỪ SUPABASE ---
         async function loadProfile() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) return; 
 
             const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+
             if (data) {
+                document.getElementById('p-avatar').value = data.avatar || "";
                 document.getElementById('p-name').value = data.name || "";
+                document.getElementById('p-gender').value = data.gender || "";
+                document.getElementById('p-school').value = data.school || "";
+                document.getElementById('p-region').value = data.region || "";
+                document.getElementById('p-time').value = data.online_time || "";
                 if(data.avatar) document.getElementById('p-avatar-preview').src = data.avatar;
-                // Cập nhật các UI khác tương tự...
+
+                document.getElementById('chk-sat').checked = data.has_sat || false;
+                document.getElementById('chk-ielts').checked = data.has_ielts || false;
+                document.getElementById('chk-hsa').checked = data.has_hsa || false;
+                document.getElementById('chk-thpt').checked = data.has_thpt || false;
+
+                toggleExam('box-sat', document.getElementById('chk-sat'));
+                toggleExam('box-ielts', document.getElementById('chk-ielts'));
+                toggleExam('box-hsa', document.getElementById('chk-hsa'));
+                toggleExam('box-thpt', document.getElementById('chk-thpt'));
+
+                document.getElementById('sat-target').value = data.sat_target || "";
+                document.getElementById('sat-math').value = data.sat_math || "";
+                document.getElementById('sat-verbal').value = data.sat_verbal || "";
+
+                document.getElementById('ielts-curr').value = data.ielts_curr || "";
+                document.getElementById('ielts-target').value = data.ielts_target || "";
+                document.getElementById('ielts-strong').value = data.ielts_strong || "";
+                document.getElementById('ielts-weak').value = data.ielts_weak || "";
+
+                document.getElementById('hsa-track').value = data.hsa_track || "";
+                document.getElementById('hsa-target').value = data.hsa_target || "";
+                document.getElementById('hsa-commit').value = data.hsa_commit || "";
+                document.getElementById('hsa-strong').value = data.hsa_strong || "";
+                document.getElementById('hsa-weak').value = data.hsa_weak || "";
+
+                document.getElementById('thpt-combo').value = data.thpt_combo || "";
+                document.getElementById('thpt-commit').value = data.thpt_commit || "";
             }
         }
 
-        // --- CHUYỂN MÀN HÌNH ---
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        }
-
-        // --- CÁC HÀM TIỆN ÍCH KHÁC ---
-        function changeBg(id) { 
-            document.getElementById('bgFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&showinfo=0&rel=0&iv_load_policy=3&disablekb=1`; 
+            if(id === 'lobby') document.querySelectorAll('.nav-item')[2].classList.add('active');
+            if(id === 'solo') document.querySelectorAll('.nav-item')[1].classList.add('active');
+            if(id === 'shop') document.querySelectorAll('.nav-item')[4].classList.add('active');
+            if(id === 'profile') document.querySelectorAll('.nav-item')[0].classList.add('active');
         }
 
         function updateAvatarPreview() {
@@ -832,8 +929,355 @@
             if(url) document.getElementById('p-avatar-preview').src = url;
         }
 
-        // ... Các hàm startTimer, resetTimer, sendMsg (giữ nguyên code cũ của cậu) ...
-        // Lưu ý: tớ lược bớt các hàm timer để code gọn, cậu cứ dán tiếp code timer của cậu vào dưới này.
+        let timerInterval;
+        let isTimerRunning = false;
+        let defaultWork = 50;
+        let defaultBreak = 10;
+        let currentMode = 'work'; 
+        let timeLeft = defaultWork * 60;
+
+        function updateTimerUI() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            const timeString = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+            document.getElementById('timerDisplay').innerText = timeString; 
+            if(document.getElementById('teamTimerDisplay')) {
+                document.getElementById('teamTimerDisplay').innerText = timeString;
+            }
+            const statusText = currentMode === 'work' ? "WORK TIME 🔥" : "BREAK TIME ☕";
+            const statusColor = currentMode === 'work' ? "var(--primary)" : "#2ecc71";
+            const soloLabel = document.getElementById('pomoStatus');
+            soloLabel.innerText = statusText;
+            soloLabel.style.color = statusColor;
+            if(currentMode === 'break') soloLabel.classList.add('break'); 
+            else soloLabel.classList.remove('break');
+            const teamLabel = document.getElementById('teamPomoStatus');
+            if(teamLabel) {
+                teamLabel.innerText = statusText;
+                teamLabel.style.color = statusColor;
+            }
+        }
+
+        function startTimer(type = 'solo') {
+            if(isTimerRunning) return;
+
+            if(currentMode === 'work') {
+                const betInputId = type === 'solo' ? 'soloBetInput' : 'teamBetInput';
+                const betVal = parseInt(document.getElementById(betInputId).value) || 0;
+                
+                if(betVal > 0) {
+                    if(betVal > spoints) {
+                        alert("Không đủ S.Points để cược!");
+                        return;
+                    }
+                    if(confirm(`Bạn có chắc muốn cược ${betVal} SP?\nThắng: +${betVal*2} SP\nThua/Reset: Mất trắng.`)) {
+                        spoints -= betVal;
+                        currentBet = betVal;
+                        updateCurrencyUI();
+                        document.getElementById(betInputId).disabled = true;
+                    } else {
+                        return; 
+                    }
+                }
+            }
+
+            isTimerRunning = true;
+            document.getElementById('btnStartTimer').innerText = "PAUSE";
+            document.getElementById('btnStartTimer').style.background = "rgba(255,255,255,0.2)";
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    switchMode(); 
+                }
+            }, 1000); 
+        }
+
+        function switchMode() {
+            if(currentMode === 'work') {
+                if(currentBet > 0) {
+                    const winAmount = currentBet * 2;
+                    spoints += winAmount;
+                    alert(`🎉 CHÚC MỪNG!\nBạn đã hoàn thành phiên học.\nNhận lại: ${winAmount} S.Points (Gấp đôi)`);
+                    currentBet = 0;
+                    document.getElementById('soloBetInput').value = "";
+                    document.getElementById('teamBetInput').value = "";
+                    document.getElementById('soloBetInput').disabled = false;
+                    document.getElementById('teamBetInput').disabled = false;
+                } else {
+                    spoints += 50; 
+                    alert("⏰ HẾT GIỜ HỌC! (+50 SP)\nNghỉ ngơi " + defaultBreak + " phút nhé!");
+                }
+                currentMode = 'break';
+                timeLeft = defaultBreak * 60;
+            } else {
+                currentMode = 'work';
+                timeLeft = defaultWork * 60;
+                alert("⏰ HẾT GIỜ NGHỈ!\nQuay lại bàn học nào!");
+            }
+            updateCurrencyUI();
+            updateTimerUI();
+            document.getElementById('btnStartTimer').innerText = "START NEXT";
+            document.getElementById('btnStartTimer').style.background = "";
+        }
+
+        function resetTimer() {
+            if(currentBet > 0) {
+                if(!confirm("⚠️ CẢNH BÁO:\nBạn đang trong phiên cược!\nReset bây giờ sẽ mất toàn bộ số điểm đã cược.\nBạn chắc chắn chứ?")) {
+                    return;
+                }
+                alert(`💔 Bạn đã bỏ cuộc!\nMất ${currentBet} S.Points.`);
+                currentBet = 0;
+                document.getElementById('soloBetInput').value = "";
+                document.getElementById('teamBetInput').value = "";
+                document.getElementById('soloBetInput').disabled = false;
+                document.getElementById('teamBetInput').disabled = false;
+            }
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            currentMode = 'work'; 
+            timeLeft = defaultWork * 60;
+            updateTimerUI();
+            document.getElementById('btnStartTimer').innerText = "START";
+            document.getElementById('btnStartTimer').style.background = "";
+        }
+
+        function toggleSettings() {
+            const el = document.getElementById('pomoSettings');
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function saveSettings() {
+            const w = parseInt(document.getElementById('setWork').value);
+            const b = parseInt(document.getElementById('setBreak').value);
+            if(w > 0 && b > 0) {
+                defaultWork = w;
+                defaultBreak = b;
+                alert(`Đã lưu: ${w}p Học / ${b}p Nghỉ`);
+                toggleSettings(); 
+                resetTimer(); 
+            } else {
+                alert("Thời gian phải lớn hơn 0!");
+            }
+        }
+
+        function buyItem(name, cost, type, action) {
+            let current = type === 'point' ? spoints : pennies;
+            let currencyName = type === 'point' ? 'S.Point' : 'Pen';
+            if(current >= cost) {
+                if(confirm(`Mua "${name}" với giá ${cost} ${currencyName}?`)) {
+                    if(type === 'point') spoints -= cost; else pennies -= cost;
+                    updateCurrencyUI();
+                    if(action === 'activate') {
+                        isPremium = true;
+                        document.getElementById('premium-badge').style.display = 'flex';
+                        alert("🎉 CHÚC MỪNG! PREMIUM ĐĐ KÍCH HOẠT!");
+                    } else {
+                        alert(`Đã mua ${name} thành công!`);
+                    }
+                }
+            } else {
+                alert(`Không đủ tiền! Cần thêm ${cost - current} ${currencyName}.`);
+            }
+        }
+
+        function buyBackground(id, name) {
+            if(spoints >= 200) {
+                if(confirm(`Mua background "${name}" (200 SP)?`)) {
+                    spoints -= 200;
+                    updateCurrencyUI();
+                    changeBg(id);
+                    alert(`Đã đổi không gian: ${name}`);
+                }
+            } else {
+                alert("Thiếu S.Point (Cần 200)!");
+            }
+        }
+
+        function updateCurrencyUI() {
+            document.getElementById('sp-display').innerText = spoints;
+            document.getElementById('pen-display').innerText = pennies;
+        }
+
+        function changeBg(id) { 
+            document.getElementById('bgFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&showinfo=0&rel=0&iv_load_policy=3&disablekb=1`; 
+        }
+
+        function openFilter() { document.getElementById('filterModal').style.display='flex'; }
+
+        function finishMatch() {
+            const subject = document.getElementById('f-subject').value;
+            const size = document.getElementById('f-size').value;
+            const goal = document.getElementById('f-goal').value;
+            document.getElementById('filterModal').style.display='none';
+            document.getElementById('loadingOverlay').style.display='block';
+            let steps = ["Đang kết nối máy chủ...", `Đang tìm Team ${size} người...`, `Lọc ứng viên môn ${subject}...`, "Đang ghép nối..."];
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i < steps.length) {
+                    document.getElementById('loadingText').innerText = steps[i];
+                    i++;
+                }
+            }, 700);
+            setTimeout(() => {
+                clearInterval(interval);
+                document.getElementById('loadingOverlay').style.display='none';
+                document.getElementById('lobby').classList.remove('active');
+                document.getElementById('team').classList.add('active');
+                document.getElementById('teamNav').style.display = 'flex';
+                document.getElementById('teamNav').classList.add('active');
+                updateTeamUI(size);
+                alert(`Match thành công!\nTeam: ${size} người\nMôn: ${subject}\nMục tiêu: ${goal}`);
+            }, 3000);
+        }
+
+        function updateTeamUI(size) {
+            const grid = document.getElementById('videoGrid');
+            grid.innerHTML = ''; 
+            
+            grid.innerHTML += `
+                <div style="aspect-ratio: 16/9; background: #000; border-radius: 10px; border: 2px solid white; position: relative; overflow: hidden;">
+                    <video id="localVideo" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                    <span style="position: absolute; bottom: 5px; left: 10px; z-index:2; text-shadow: 0 0 5px black;">You (Cam On)</span>
+                </div>`;
+            startWebcam();
+
+            const partnerVideos = [
+                'Hpfl1iNOd48', '-GcDrDeth1E', 'ctqo0WLzgoM', 'ADB-tGLvmB8', '1ziSDBlK5lY'
+            ];
+            partnerVideos.sort(() => Math.random() - 0.5);
+
+            for(let i=1; i < size; i++) {
+                const vidId = partnerVideos[i % partnerVideos.length];
+                const connId = `conn-${i}`;
+                
+                grid.innerHTML += `
+                    <div style="aspect-ratio: 16/9; background: rgba(0,0,0,0.5); border-radius: 10px; border: 2px solid var(--primary); position: relative; overflow: hidden;">
+                        <div class="conn-loader" id="${connId}">
+                            <div class="radar"></div>
+                            <p>CONNECTING PEER...</p>
+                        </div>
+                        <iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${vidId}&showinfo=0&rel=0" 
+                            style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media"></iframe>
+                        <span style="position: absolute; bottom: 5px; left: 10px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px; z-index: 6;">Partner ${i}</span>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    const loader = document.getElementById(connId);
+                    if(loader) loader.style.display = 'none';
+                }, 4000);
+            }
+            if(size > 2) grid.style.gridTemplateColumns = "1fr 1fr";
+            else grid.style.gridTemplateColumns = "1fr 1fr"; 
+        }
+
+        function startWebcam() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                    .then(function(stream) {
+                        const videoElement = document.getElementById('localVideo');
+                        if (videoElement) { videoElement.srcObject = stream; }
+                    })
+                    .catch(function(error) {
+                        const videoElement = document.getElementById('localVideo');
+                        if (videoElement) {
+                            videoElement.parentElement.innerHTML += '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#333;">Camera Off</div>';
+                        }
+                    });
+            }
+        }
+
+        function toggleChat() {
+            if(!isPremium) {
+                alert("⚠️ TÍNH NĂNG CAO CẤP!\nCần gói Premium để dùng AI.\nVào Shop mua gói dùng thử 5000 SP nhé!");
+                return;
+            }
+            const box = document.getElementById('aiChat');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        async function sendMsg() {
+            const input = document.getElementById('chatInput');
+            const txt = input.value.trim();
+            if(!txt) return;
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML += `<div class="msg user" style="display:block; width:100%; text-align:right; margin-top:5px;">${txt}</div>`;
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+            const loadingId = "loading-" + Date.now();
+            chatBody.innerHTML += `<div id="${loadingId}" class="msg ai" style="margin-top:5px; font-style:italic; opacity:0.7">Gemini đang suy nghĩ...</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: txt }] }],
+                        systemInstruction: { parts: [{ text: "Bạn là Gemini AI Tutor, một trợ lý học tập thân thiện trên nền tảng StudyCrush. Hãy trả lời ngắn gọn, súc tích, vui vẻ và tập trung vào việc giúp người dùng học tập hiệu quả. Dùng tiếng Việt." }] },
+                        safetySettings: [
+                            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                        ]
+                    })
+                });
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+                if (data.candidates && data.candidates[0].content) {
+                    const reply = data.candidates[0].content.parts[0].text;
+                    chatBody.innerHTML += `<div class="msg ai" style="margin-top:5px;">${reply}</div>`;
+                } else {
+                    chatBody.innerHTML += `<div class="msg ai error" style="margin-top:5px;">AI bị lỗi nhẹ. Thử lại nha!</div>`;
+                }
+            } catch (e) {
+                if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                chatBody.innerHTML += `<div class="msg ai error" style="margin-top:5px;">Lỗi mạng rồi!</div>`;
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function sendTeamMsg(inputElement) {
+            const txt = inputElement.value.trim();
+            if(!txt) return;
+            const box = document.getElementById('teamChatBox');
+            box.innerHTML += `<p style="color: white; font-size: 13px; margin-top:5px;"><b>You:</b> ${txt}</p>`;
+            inputElement.value = '';
+            box.scrollTop = box.scrollHeight;
+            setTimeout(async () => {
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: txt }] }],
+                            systemInstruction: { parts: [{ text: "Bạn là một sinh viên FTU đang học cùng nhóm online trên StudyCrush. Bạn tên là Partner 1. Hãy trả lời tin nhắn của bạn cùng nhóm một cách tự nhiên, thân thiện, như bạn bè đồng trang lứa. Đôi khi dùng teencode hoặc icon. Ngắn gọn thôi." }] }
+                        })
+                    });
+                    const data = await response.json();
+                    if (data.candidates && data.candidates[0].content) {
+                        const reply = data.candidates[0].content.parts[0].text;
+                        box.innerHTML += `<p style="color: #aaa; font-size: 13px; margin-top:5px;"><b>Partner 1:</b> ${reply}</p>`;
+                        box.scrollTop = box.scrollHeight;
+                    }
+                } catch (e) { console.error("Team AI Error"); }
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function playMusic() {
+            const url = document.getElementById('musicLink').value;
+            let id = "";
+            if (url.includes("v=")) id = url.split("v=")[1].split("&")[0];
+            else if (url.includes("youtu.be/")) id = url.split("youtu.be/")[1];
+            if (id) document.getElementById('musicFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        }
     </script>
 </body>
 </html>
+cậu check lại code này xem nó lại lỗi cũ rồi kìa
+giờ như thế nào đây
