@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyCrush - Full Real AI Integrated</title>
+    <title>StudyCrush - Real MVP Matching</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -55,7 +55,6 @@
             width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px;
             border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.3); color: white; outline:none; font-size: 16px;
         }
-        textarea.login-input { resize: vertical; }
 
         /* SIDEBAR */
         .sidebar {
@@ -93,7 +92,6 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
         /* PANELS */
         .panel { 
@@ -122,7 +120,7 @@
             border-radius: 8px; text-align: center; font-family: 'VT323'; font-size: 20px;
         }
 
-        /* SHOP & DEPOSIT STYLES */
+        /* SHOP STYLES */
         .shop-container { padding: 0 30px 50px 30px; }
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
         .shop-item { 
@@ -140,22 +138,6 @@
         }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* SPONSOR LOGO STYLES (FOOTER) */
-        .lobby-footer {
-            position: absolute; bottom: 30px; left: 0; width: 100%;
-            text-align: center; z-index: 10;
-        }
-        .sponsor-badge {
-            height: 55px; width: auto; margin: 0 10px; border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.4); 
-            padding: 6px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer; backdrop-filter: blur(8px);
-        }
-        .sponsor-badge:hover {
-            transform: translateY(-8px) scale(1.05); border-color: var(--primary);
-            box-shadow: 0 5px 20px rgba(255, 158, 181, 0.4); background: rgba(255,255,255,0.15);
-        }
-
         /* MODALS */
         .modal-overlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
@@ -163,11 +145,11 @@
         }
         .modal-box {
             background: #1e1e2e; padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; width: 800px; max-height: 90vh; overflow-y: auto;
+            text-align: center; max-height: 90vh; overflow-y: auto;
             box-shadow: 0 0 50px rgba(255, 158, 181, 0.2);
         }
         .filter-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; text-align: left;
+            display: grid; gap: 15px; margin: 20px 0; text-align: left;
         }
         .filter-group { display: flex; flex-direction: column; gap: 5px; }
         .filter-label { font-size: 14px; color: #aaa; font-weight: bold; margin-left: 5px;}
@@ -183,7 +165,7 @@
             position: absolute; bottom: 80px; right: 20px; width: 60px; height: 60px;
             background: linear-gradient(45deg, #00d2d3, #2e86de); border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-size: 28px; cursor: pointer; box-shadow: 0 0 20px rgba(0, 210, 211, 0.5); z-index: 900; 
-            border: 2px solid white; animation: float 3s infinite ease-in-out;
+            border: 2px solid white;
         }
         .chat-box {
             position: fixed; bottom: 150px; right: 20px; width: 380px; height: 500px;
@@ -195,7 +177,6 @@
         .msg { padding: 10px 15px; border-radius: 15px; max-width: 85%; line-height: 1.4; word-wrap: break-word; font-size: 14px;}
         .msg.ai { background: rgba(255,255,255,0.1); align-self: flex-start; border-bottom-left-radius: 2px; }
         .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .msg.partner { background: rgba(255, 255, 255, 0.2); color: #fff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid rgba(255,255,255,0.3); }
 
         /* Music Player */
         .music-dock {
@@ -209,26 +190,6 @@
         }
         .music-body { height: auto; transition: 0.3s; }
         .music-body.minimized { height: 0; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-
-        /* Fake Connection Overlay */
-        .conn-loader {
-            position: absolute; inset: 0; background: #000; z-index: 5;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-family: 'VT323'; color: var(--primary);
-        }
-        .radar {
-            width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary);
-            margin-bottom: 10px; animation: radar-pulse 1.5s infinite;
-        }
-        @keyframes radar-pulse {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
 
         /* Bet Box */
         .bet-box {
@@ -247,7 +208,7 @@
     <div id="loginPage">
         <div class="login-card">
             <h1 style="font-size: 60px; color: var(--primary); font-family: 'VT323'; margin-bottom: 0px;">StudyCrush</h1>
-            <p style="margin-bottom: 20px; opacity: 0.7; font-family: 'VT323'; font-size: 24px;">SOLO RESTORED</p>
+            <p style="margin-bottom: 20px; opacity: 0.7; font-family: 'VT323'; font-size: 24px;">MVP REAL-TIME MATCHING</p>
             
             <input type="email" id="loginEmail" class="login-input" placeholder="Nhập Email của cậu...">
             <input type="password" id="loginPass" class="login-input" placeholder="Mật khẩu (ít nhất 6 ký tự)...">
@@ -326,14 +287,6 @@
                                 <input type="checkbox" style="transform: scale(1.5);">
                                 <span>Học 2 tiếng liên tục (+50 <i class="fas fa-heart"></i>)</span>
                             </div>
-                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" style="transform: scale(1.5);">
-                                <span>Hoàn thành 1 đề Reading (+30 <i class="fas fa-heart"></i>)</span>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" style="transform: scale(1.5);">
-                                <span>Check-in điểm danh (+10 <i class="fas fa-heart"></i>)</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,15 +294,17 @@
 
             <div id="team" class="screen">
                 <div style="padding: 30px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+                    
                     <div class="panel">
-                        <h3 style="margin-bottom: 15px;"><i class="fas fa-video"></i> Team Space</h3>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;" id="videoGrid">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3><i class="fas fa-video"></i> Team Space</h3>
+                            <button class="buy-btn" style="background: #e74c3c; width: auto; padding: 5px 15px; font-size: 12px;" onclick="leaveRoom()">
+                                <i class="fas fa-sign-out-alt"></i> Rời Phòng
+                            </button>
                         </div>
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button class="buy-btn" style="background: transparent; border: 1px solid white; width: auto; padding: 0 20px;"><i class="fas fa-microphone"></i></button>
-                            <button class="buy-btn" style="background: transparent; border: 1px solid white; width: auto; padding: 0 20px;"><i class="fas fa-video"></i></button>
-                            <button class="buy-btn" style="background: #e74c3c; width: auto; padding: 0 20px; margin-left: auto;" onclick="showScreen('lobby')">Rời Phòng</button>
-                        </div>
+                        
+                        <div id="videoGrid" style="width: 100%; height: 550px; border-radius: 15px; overflow: hidden; background: #000; box-shadow: 0 5px 20px rgba(0,0,0,0.5);">
+                            </div>
                     </div>
 
                     <div class="panel" style="display: flex; flex-direction: column;">
@@ -369,10 +324,9 @@
                         </div>
                         
                         <div id="teamChatBox" style="flex: 1; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-bottom: 10px; overflow-y: auto;">
-                            <p style="color: var(--primary); font-size: 13px;">System: Updated Timer Settings (50/10)</p>
-                            <p style="color: #aaa; font-size: 13px; margin-top:5px;"><b>Partner 1:</b> Hi cậu, tớ học Vĩ mô nhé.</p>
+                            <p style="color: var(--primary); font-size: 13px;">System: Nhóm đã được tạo thành công!</p>
                         </div>
-                        <input type="text" id="teamChatInput" class="login-input" placeholder="Chat with team..." style="margin:0; padding: 10px;" onkeypress="if(event.key==='Enter') sendTeamMsg(this)">
+                        <input type="text" id="teamChatInput" class="login-input" placeholder="Chat với Team..." style="margin:0; padding: 10px;" onkeypress="if(event.key==='Enter') sendTeamMsg(this)">
                     </div>
                 </div>
             </div>
@@ -380,112 +334,32 @@
             <div id="lobby" class="screen active">
                 <div style="height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
                     <h1 style="font-size: 100px; font-family: 'VT323'; text-shadow: 0 0 30px var(--primary); margin-bottom: 10px;">SẢNH CHỜ</h1>
-                    <p style="margin-bottom: 40px; font-size: 20px; opacity: 0.8;">Tìm đồng đội cùng chí hướng tại FTU & hơn thế nữa</p>
+                    <p style="margin-bottom: 40px; font-size: 20px; opacity: 0.8;">Tìm đồng đội chạy bo cùng cậu tại FTU & hơn thế nữa</p>
                     
                     <button class="buy-btn" onclick="openFilter()" style="width: auto; padding: 25px 80px; font-size: 28px; border-radius: 60px; animation: pulse 2s infinite; border: 4px solid white; box-shadow: 0 0 50px rgba(255,158,181,0.5);">
                         <i class="fas fa-search"></i> TÌM MATCH
                     </button>
-                    
-                    <div style="margin-top: 60px; display: flex; gap: 40px; background: rgba(255,255,255,0.05); padding: 20px 50px; border-radius: 50px;">
-                        <i class="fab fa-python" style="font-size: 40px; opacity: 0.5;"></i>
-                        <i class="fas fa-chart-line" style="font-size: 40px; opacity: 0.5;"></i>
-                        <i class="fas fa-language" style="font-size: 40px; opacity: 0.5;"></i>
-                    </div>
-                </div>
-
-                <div class="lobby-footer">
-                    <p class="pixel-font" style="color: rgba(255,255,255,0.4); font-size: 14px; margin-bottom: 12px; letter-spacing: 3px; text-transform: uppercase;">
-                        Đơn vị bảo trợ & Tổ chức
-                    </p>
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        <img src="ftu.png" class="sponsor-badge" title="Foreign Trade University" onerror="this.style.display='none'">
-                        <img src="fiis.jpg" class="sponsor-badge" title="FIIS Innovation" onerror="this.style.display='none'">
-                        <img src="cte.jpg" class="sponsor-badge" title="Club of Technology in Economics" onerror="this.style.display='none'">
-                        <img src="flc.png" class="sponsor-badge" title="Foreign Language Club" onerror="this.style.display='none'">
-                    </div>
                 </div>
             </div>
 
             <div id="shop" class="screen">
                 <div class="shop-container">
-                    <div style="background: linear-gradient(45deg, #00d2d3, #2e86de); border-radius: 20px; padding: 25px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(46, 134, 222, 0.4);">
-                        <div>
-                            <h2 style="margin-bottom: 5px; font-weight: 900;"><i class="fas fa-crown"></i> DÙNG THỬ PREMIUM (3 NGÀY)</h2>
-                            <p>Mở khóa <b>Gemini AI 1.5 Pro</b>, Chặn TikTok/Youtube, Filter chuyên sâu</p>
-                        </div>
-                        <button class="buy-btn" style="width: auto; padding: 12px 30px; background: white; color: #2e86de; font-size: 18px;" onclick="buyItem('Trial Premium', 5000, 'point', 'activate')">MUA (5000 SP)</button>
-                    </div>
-
-                    <h2 style="margin-bottom: 20px;">Video Backgrounds (200 SP/Món)</h2>
-                    <div class="shop-grid">
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/9kzE8isXlQY/mqdefault.jpg" class="item-thumb">
-                            <h4>Summer Vibe</h4>
-                            <button class="buy-btn" onclick="buyBackground('9kzE8isXlQY', 'Summer')">Mua (200 SP)</button>
-                        </div>
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/l-2hOKIrIyI/mqdefault.jpg" class="item-thumb">
-                            <h4>Rainy Window</h4>
-                            <button class="buy-btn" onclick="buyBackground('l-2hOKIrIyI', 'Rainy')">Mua (200 SP)</button>
-                        </div>
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/vCTRNKPJr40/mqdefault.jpg" class="item-thumb">
-                            <h4>Lofi Girl</h4>
-                            <button class="buy-btn" onclick="buyBackground('vCTRNKPJr40', 'Lofi Girl')">Mua (200 SP)</button>
-                        </div>
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/dCQ8GYqVKdc/mqdefault.jpg" class="item-thumb">
-                            <h4>Coffee Shop</h4>
-                            <button class="buy-btn" onclick="buyBackground('dCQ8GYqVKdc', 'Coffee')">Mua (200 SP)</button>
-                        </div>
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/BYTxPFj44uo/mqdefault.jpg" class="item-thumb">
-                            <h4>Cat Nap</h4>
-                            <button class="buy-btn" onclick="buyBackground('BYTxPFj44uo', 'Cat 1')">Mua (200 SP)</button>
-                        </div>
-                        <div class="shop-item">
-                            <img src="https://img.youtube.com/vi/Ks_Cnfsm70c/mqdefault.jpg" class="item-thumb">
-                            <h4>Space Travel</h4>
-                            <button class="buy-btn" onclick="buyBackground('Ks_Cnfsm70c', 'Space')">Mua (200 SP)</button>
-                        </div>
-                    </div>
-
-                    <h2 style="margin-top: 30px; margin-bottom: 20px;">Voucher & Items</h2>
+                    <h2 style="margin-bottom: 20px; padding-top: 20px;">Voucher & Items</h2>
                     <div class="shop-grid">
                         <div class="shop-item"><h4>🍗 Gà Rán</h4><p style="font-size:12px; color:#aaa; margin-bottom:5px">Hồi phục năng lượng</p><button class="buy-btn" onclick="buyItem('Gà Rán', 300, 'point')">300 SP</button></div>
-                        <div class="shop-item"><h4>🧋 Trà Sữa</h4><p style="font-size:12px; color:#aaa; margin-bottom:5px">Tăng sự tập trung</p><button class="buy-btn" onclick="buyItem('Trà Sữa', 500, 'point')">500 SP</button></div>
-                        <div class="shop-item"><h4>📚 Docs Toán</h4><p style="font-size:12px; color:#aaa; margin-bottom:5px">Tài liệu độc quyền</p><button class="buy-btn" onclick="buyItem('Docs Toán', 200, 'point')">200 SP</button></div>
                         <div class="shop-item" style="border-color:var(--pen)"><h4>🔥 Streak Freeze</h4><p style="font-size:12px; color:#aaa; margin-bottom:5px">Giữ chuỗi ngày học</p><button class="buy-btn" style="background:var(--pen); color:black" onclick="buyItem('Streak', 20, 'pen')">20 Pen</button></div>
-                        <div class="shop-item" style="border-color:var(--pen)"><h4>✖️2️⃣ X2 Point</h4><p style="font-size:12px; color:#aaa; margin-bottom:5px">Nhân đôi điểm 1h</p><button class="buy-btn" style="background:var(--pen); color:black" onclick="buyItem('X2', 10, 'pen')">10 Pen</button></div>
                     </div>
                 </div>
             </div>
 
             <div id="deposit" class="screen">
                 <div class="shop-container">
-                    <h2 style="text-align:center; margin-bottom:30px">Chọn Gói Nâng Cấp</h2>
+                    <h2 style="text-align:center; margin-bottom:30px; margin-top:20px;">Chọn Gói Nâng Cấp</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                         <div class="shop-item" style="text-align:left; align-items: flex-start; padding: 30px;">
                             <h3 style="color:#ccc">Gói Basic</h3>
                             <h1 style="font-size:40px">39.000đ<span style="font-size:16px">/tháng</span></h1>
-                            <ul style="margin:20px 0; opacity:0.8; list-style:none; line-height: 2;">
-                                <li>✅ Xóa quảng cáo</li>
-                                <li>✅ Học tối đa 4 tiếng/lần</li>
-                                <li>✅ Chặn TikTok, YouTube</li>
-                            </ul>
                             <button class="buy-btn" style="background:white; color:black">Đăng Ký</button>
-                        </div>
-                        <div class="shop-item" style="text-align:left; align-items: flex-start; border-color: var(--primary); background: rgba(255,158,181,0.1); padding: 30px;">
-                            <div style="background: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px;">KHUYÊN DÙNG</div>
-                            <h3 style="color:var(--primary)">Gói Premium</h3>
-                            <h1 style="font-size:40px">59.000đ<span style="font-size:16px">/tháng</span></h1>
-                            <ul style="margin:20px 0; opacity:0.8; list-style:none; line-height: 2;">
-                                <li>👑 <strong>Gemini AI Mentor</strong></li>
-                                <li>👑 Không giới hạn giờ học</li>
-                                <li>👑 Matching Bộ lọc chuyên sâu</li>
-                                <li>👑 Chặn ứng dụng giải trí</li>
-                            </ul>
-                            <button class="buy-btn">Nâng Cấp Ngay</button>
                         </div>
                     </div>
                 </div>
@@ -510,24 +384,12 @@
                                     <select id="p-gender" class="login-input"><option value="">Chọn...</option><option>Nam</option><option>Nữ</option><option>Khác</option></select>
                                 </div>
                             </div>
-                            
-                            <label style="color: var(--primary); font-weight: bold; margin-top: 10px; display: block;">Ngôi trường cậu đang theo học 🏫</label>
-                            <input id="p-school" class="login-input" placeholder="Ví dụ: THPT Chuyên Hà Nội - Amsterdam...">
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-                                <div><label style="color: var(--primary); font-weight: bold;">Khu vực</label>
-                                    <select id="p-region" class="login-input"><option value="">Cậu ở đâu thế?</option><option>Miền Bắc</option><option>Miền Trung</option><option>Miền Nam</option><option>Nước ngoài</option></select>
-                                </div>
-                                <div><label style="color: var(--primary); font-weight: bold;">Khung giờ học "chân ái" 🦉</label>
-                                    <select id="p-time" class="login-input"><option value="">Thường rảnh lúc...</option><option>Sáng (6h - 12h)</option><option>Chiều (13h - 18h)</option><option>Tối / Cú đêm (19h - 3h sáng)</option></select>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
 
-                    <h3 style="color: var(--pen); margin-bottom: 15px;">🎯 Mục tiêu sắp tới của cậu là gì? (Chọn bao nhiêu cũng được nhé)</h3>
+                    <h3 style="color: var(--pen); margin-bottom: 15px;">🎯 Mục tiêu sắp tới của cậu là gì? (Tích chọn để tìm Team nhé)</h3>
                     <div style="display: flex; gap: 20px; margin-bottom: 25px;">
                         <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;"><input type="checkbox" id="chk-sat" onchange="toggleExam('box-sat', this)" style="transform: scale(1.5);"> SAT</label>
                         <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;"><input type="checkbox" id="chk-ielts" onchange="toggleExam('box-ielts', this)" style="transform: scale(1.5);"> IELTS</label>
@@ -539,72 +401,26 @@
                         <h4 style="color: #2e86de; margin-bottom: 10px;">Chinh phục SAT</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                             <div><label>Target Tổng</label><input id="sat-target" class="login-input" placeholder="VD: 1500/1600"></div>
-                            <div><label>Math (Hiện tại)</label><input id="sat-math" class="login-input" placeholder="VD: 750"></div>
-                            <div><label>Verbal (Hiện tại)</label><input id="sat-verbal" class="login-input" placeholder="VD: 600"></div>
                         </div>
                     </div>
-
                     <div id="box-ielts" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border-left: 4px solid #e15f41; margin-bottom: 15px;">
                         <h4 style="color: #e15f41; margin-bottom: 10px;">Chiến thần IELTS</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div><label>Band Hiện tại</label><input id="ielts-curr" class="login-input" placeholder="VD: 6.0"></div>
                             <div><label>Target Mong muốn</label><input id="ielts-target" class="login-input" placeholder="VD: 7.5"></div>
-                            <div><label>Kỹ năng "Gánh team" 🏆</label>
-                                <select id="ielts-strong" class="login-input"><option value="">Tự tin nhất ở...</option><option>Reading</option><option>Listening</option><option>Speaking</option><option>Writing</option></select>
-                            </div>
-                            <div><label>Kỹ năng cần "Cứu net" 🆘</label>
-                                <select id="ielts-weak" class="login-input"><option value="">Đang chật vật ở...</option><option>Writing</option><option>Speaking</option><option>Reading</option><option>Listening</option></select>
-                            </div>
                         </div>
                     </div>
-
                     <div id="box-hsa" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border-left: 4px solid #00d2d3; margin-bottom: 15px;">
                         <h4 style="color: #00d2d3; margin-bottom: 10px;">Đánh Giá Năng Lực (HSA)</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                            <div><label>Định hướng Phân môn</label>
-                                <select id="hsa-track" class="login-input"><option value="">Chọn...</option><option>Toán, Văn, Anh</option><option>Toán, Văn, Khoa học</option></select>
-                            </div>
-                            <div><label>Target Điểm</label><input id="hsa-target" class="login-input" placeholder="VD: 110/150"></div>
-                            <div><label>Độ "Try-hard"</label>
-                                <select id="hsa-commit" class="login-input"><option value="">Mức độ cày cuốc...</option><option>Học Chill Chill</option><option>Nghiêm túc</option><option>Hardcore (Sống chết)</option></select>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-                            <div><label>Môn Thế mạnh 💪</label>
-                                <select id="hsa-strong" class="login-input"><option value="">Chọn...</option><option>Toán</option><option>Văn</option><option>Tiếng Anh</option><option>Khoa học Tự nhiên</option><option>Khoa học Xã hội</option></select>
-                            </div>
-                            <div><label>Môn Cần cày thêm 📚</label>
-                                <select id="hsa-weak" class="login-input"><option value="">Chọn...</option><option>Toán</option><option>Văn</option><option>Tiếng Anh</option><option>Khoa học Tự nhiên</option><option>Khoa học Xã hội</option></select>
-                            </div>
-                        </div>
                     </div>
-
                     <div id="box-thpt" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border-left: 4px solid var(--primary); margin-bottom: 15px;">
                         <h4 style="color: var(--primary); margin-bottom: 10px;">Vượt Vũ Môn THPTQG</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div><label>Tổ hợp Khối thi</label>
-                                <select id="thpt-combo" class="login-input">
-                                    <option value="">Cậu thi khối nào...</option>
-                                    <option>A00 (Toán, Lý, Hóa)</option>
-                                    <option>A01 (Toán, Lý, Anh)</option>
-                                    <option>B00 (Toán, Hóa, Sinh)</option>
-                                    <option>C00 (Văn, Sử, Địa)</option>
-                                    <option>D01 (Toán, Văn, Anh)</option>
-                                    <option>D07 (Toán, Hóa, Anh)</option>
-                                    <option>Khác...</option>
-                                </select>
-                            </div>
-                            <div><label>Độ "Try-hard"</label>
-                                <select id="thpt-commit" class="login-input"><option value="">Mức độ cày cuốc...</option><option>Học Chill Chill</option><option>Nghiêm túc</option><option>Mục tiêu Thủ Khoa</option></select>
-                            </div>
-                        </div>
                     </div>
 
-                    <button class="buy-btn" onclick="saveProfile()" style="margin-top: 20px; font-size: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2);">LƯU PROFILE & TÌM ĐỒNG ĐỘI 🚀</button>
+                    <button class="buy-btn" onclick="saveProfile()" style="margin-top: 20px; font-size: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.2);">LƯU PROFILE</button>
                 </div>
             </div>
 
-            <div id="rank" class="screen"><div style="text-align:center; padding:50px"><h2>Bảng Xếp Hạng</h2><p>1. Team FTU - 50000 SP</p><p>2. StudyBoy - 48000 SP</p></div></div>
+            <div id="rank" class="screen"><div style="text-align:center; padding:50px"><h2>Bảng Xếp Hạng</h2><p>1. Team FTU - 50000 SP</p></div></div>
 
         </div>
 
@@ -627,95 +443,40 @@
             </div>
             <div class="music-body" id="musicBody">
                 <iframe id="musicFrame" width="100%" height="150" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0" allow="autoplay"></iframe>
-                <div style="padding:10px; display:flex"><input id="musicLink" style="flex:1; background:#333; border:none; color:white; padding:5px; border-radius: 5px;" placeholder="Link YouTube..."><button onclick="playMusic()" style="margin-left:5px; background: white; color: black; border: none; padding: 0 10px; border-radius: 5px; cursor: pointer;">Play</button></div>
             </div>
         </div>
 
     </div>
 
     <div class="modal-overlay" id="filterModal">
-        <div class="modal-box">
+        <div class="modal-box" style="width: 450px;">
             <h2 style="font-family: 'VT323'; font-size: 40px; color: var(--primary);">BỘ LỌC TÌM KIẾM</h2>
-            <p style="margin-bottom: 20px;">Cấu hình đồng đội lý tưởng của cậu</p>
+            <p style="margin-bottom: 20px;">Tìm đồng đội chạy bo cùng cậu!</p>
             
-            <div class="filter-grid">
+            <div class="filter-grid" style="grid-template-columns: 1fr;">
                 <div class="filter-group">
-                    <span class="filter-label">Size Team</span>
+                    <span class="filter-label">Loại kỳ thi (Dựa theo Profile của cậu)</span>
+                    <select class="filter-select" id="f-exam"></select>
+                </div>
+                
+                <div class="filter-group">
+                    <span class="filter-label">Size Team (Kích thước nhóm)</span>
                     <select class="filter-select" id="f-size">
-                        <option value="2">Team 2 (Duo - Tập trung cao)</option>
-                        <option value="3">Team 3 (Trio - Cân bằng)</option>
-                        <option value="4">Team 4 (Squad - Thảo luận)</option>
-                        <option value="5">Team 5 (Party - Brainstorm)</option>
+                        <option value="2">Team 2 người (Duo)</option>
+                        <option value="3">Team 3 người (Trio)</option>
+                        <option value="4">Team 4 người (Squad)</option>
+                        <option value="5">Team 5 người (Party)</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">Mục Tiêu</span>
-                    <select class="filter-select" id="f-goal">
-                        <option>IELTS 8.0+</option>
-                        <option>SAT 1500+</option>
-                        <option>GPA 4.0</option>
-                        <option>Nghiên cứu khoa học</option>
-                        <option>Coding / Tech</option>
-                        <option>Startup / Business</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Môn Học Chính</span>
-                    <select class="filter-select" id="f-subject">
-                        <option>Tiếng Anh</option>
-                        <option>Toán Cao Cấp</option>
-                        <option>Kinh Tế Vĩ Mô/Vi Mô</option>
-                        <option>Lập Trình (Python/Web)</option>
-                        <option>Marketing</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Trình Độ</span>
-                    <select class="filter-select" id="f-level">
-                        <option>Newbie (Cần người gánh)</option>
-                        <option>Junior (Biết sơ sơ)</option>
-                        <option>Pro (Cày cuốc)</option>
-                        <option>Master (Gosu)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Khu Vực</span>
-                    <select class="filter-select" id="f-loc">
-                        <option>Online (Toàn quốc)</option>
-                        <option>Hà Nội (FTU/NEU/BK)</option>
-                        <option>TP.HCM</option>
-                        <option>Đà Nẵng</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Sở Trường</span>
-                    <select class="filter-select" id="f-strength">
-                        <option>Tư duy Logic</option>
-                        <option>Sáng tạo / Art</option>
-                        <option>Ghi nhớ / Lý thuyết</option>
-                        <option>Thuyết trình / Biện luận</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Khung Giờ</span>
-                    <select class="filter-select" id="f-time">
-                        <option>Sáng (8h - 11h)</option>
-                        <option>Chiều (14h - 17h)</option>
-                        <option>Tối (19h - 22h)</option>
-                        <option>Đêm (22h - 2h sáng)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Phong Cách</span>
-                    <select class="filter-select" id="f-style">
-                        <option>Chill (Vừa học vừa nghe nhạc)</option>
-                        <option>Hardcore (Pomodoro cực căng)</option>
-                        <option>Supportive (Hỏi đáp liên tục)</option>
-                    </select>
-                </div>
-                <div class="filter-group" style="grid-column: span 2;">
-                    <span class="filter-label">Sở Thích Phụ (Optional)</span>
-                    <input class="filter-select" placeholder="Ví dụ: Game, Guitar, Manga, Kpop..." id="f-hobby">
+
+                <div class="filter-group" style="margin-top: 10px;">
+                    <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+                        <input type="checkbox" id="f-relax" style="transform: scale(1.5); margin-top: 5px;">
+                        <div>
+                            <span style="font-weight: bold; color: var(--pen); font-size: 16px;">Bật Relax Matching</span><br>
+                            <span style="font-size: 12px; color: #aaa;">Tăng tốc độ ghép nhóm cực nhanh nhưng sẽ nới lỏng yêu cầu về số lượng người trong Team.</span>
+                        </div>
+                    </label>
                 </div>
             </div>
 
@@ -730,7 +491,7 @@
         <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white;">
             <i class="fas fa-circle-notch fa-spin" style="font-size: 50px; color: var(--primary);"></i>
             <h3 style="margin-top:20px; font-family: 'VT323'; font-size: 30px;">ĐANG TÌM ĐỒNG ĐỘI...</h3>
-            <p id="loadingText">Quét dữ liệu FTU...</p>
+            <p id="loadingText">Đang đưa vào hàng chờ hệ thống...</p>
         </div>
     </div>
 
@@ -740,7 +501,6 @@
         // ✅ CẤU HÌNH KẾT NỐI SUPABASE
         const supabaseUrl = 'https://veerprklxlvairtrgzfw.supabase.co';
         const supabaseKey = 'sb_publishable_NqCpdzjrLhEDHz8poYKptw_s3WXIXY8';
-        
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         const API_KEY = "AIzaSyBktP5Z8QTHM8Si-NopotNl3DAZ_bW0NK4"; 
@@ -751,7 +511,6 @@
         let pennies = 999999;
         let currentBet = 0; 
         
-        // --- INIT & KIỂM TRA PHIÊN ĐĂNG NHẬP ---
         window.onload = async function() {
             const videos = ['9kzE8isXlQY','l-2hOKIrIyI','vCTRNKPJr40','dCQ8GYqVKdc'];
             changeBg(videos[Math.floor(Math.random() * videos.length)]);
@@ -765,46 +524,23 @@
             }
         };
 
-        // --- CHỨC NĂNG ĐĂNG KÝ (SUPABASE) ---
+        // --- AUTH & PROFILE ---
         async function dangKySupabase() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
-
-            if(!email || !password) {
-                alert("Vui lòng nhập đủ Email và Mật khẩu nhé!");
-                return;
-            }
-
-            const { data, error } = await supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert("Lỗi đăng ký: " + error.message);
-            } else {
-                alert("Đăng ký thành công! Hãy bấm nút ĐĂNG NHẬP để vào sảnh nhé.");
-            }
+            if(!email || !password) { alert("Vui lòng nhập đủ Email và Mật khẩu nhé!"); return; }
+            const { error } = await supabaseClient.auth.signUp({ email: email, password: password });
+            if (error) alert("Lỗi đăng ký: " + error.message);
+            else alert("Đăng ký thành công! Hãy bấm nút ĐĂNG NHẬP để vào sảnh nhé.");
         }
 
-        // --- CHỨC NĂNG ĐĂNG NHẬP (SUPABASE) ---
         async function dangNhapSupabase() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPass').value;
-
-            if(!email || !password) {
-                alert("Vui lòng nhập đủ Email và Mật khẩu!");
-                return;
-            }
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert("Sai Email hoặc Mật khẩu rồi!");
-            } else {
+            if(!email || !password) { alert("Vui lòng nhập đủ Email và Mật khẩu!"); return; }
+            const { error } = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+            if (error) { alert("Sai Email hoặc Mật khẩu rồi!"); } 
+            else {
                 document.getElementById('loginPage').style.display='none'; 
                 document.getElementById('mainApp').style.display='flex'; 
                 alert("Chào mừng đến với StudyCrush!");
@@ -812,41 +548,23 @@
             }
         }
 
-        // --- HÀM ẨN/HIỆN CHECKBOX KỲ THI ---
         function toggleExam(boxId, checkbox) {
             document.getElementById(boxId).style.display = checkbox.checked ? 'block' : 'none';
         }
 
-        // --- SỬA CHỖ NÀY ĐỂ UPLOAD ẢNH ---
         async function saveProfile() {
             const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) { 
-                alert("Nhớ Đăng nhập trước khi lưu profile nha!"); 
-                return; 
-            }
+            if (!user) { alert("Nhớ Đăng nhập trước khi lưu profile nha!"); return; }
 
             let avatarUrlToSave = document.getElementById('p-avatar-preview').src;
             const fileInput = document.getElementById('p-avatar');
 
-            // Xử lý upload ảnh nếu người dùng chọn file mới
             if (fileInput.files && fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-
-                const { error: uploadError } = await supabaseClient.storage
-                    .from('avatars')
-                    .upload(fileName, file);
-
-                if (uploadError) {
-                    alert("Lỗi up ảnh: " + uploadError.message);
-                    return;
-                }
-
-                const { data: publicUrlData } = supabaseClient.storage
-                    .from('avatars')
-                    .getPublicUrl(fileName);
-                    
+                const fileName = `${user.id}-${Math.random()}.${file.name.split('.').pop()}`;
+                const { error: uploadError } = await supabaseClient.storage.from('avatars').upload(fileName, file);
+                if (uploadError) { alert("Lỗi up ảnh: " + uploadError.message); return; }
+                const { data: publicUrlData } = supabaseClient.storage.from('avatars').getPublicUrl(fileName);
                 avatarUrlToSave = publicUrlData.publicUrl;
             }
 
@@ -854,61 +572,25 @@
                 id: user.id,
                 avatar: avatarUrlToSave,
                 name: document.getElementById('p-name').value,
-                gender: document.getElementById('p-gender').value,
-                school: document.getElementById('p-school').value,
-                region: document.getElementById('p-region').value,
-                online_time: document.getElementById('p-time').value,
-                
                 has_sat: document.getElementById('chk-sat').checked,
                 has_ielts: document.getElementById('chk-ielts').checked,
                 has_hsa: document.getElementById('chk-hsa').checked,
-                has_thpt: document.getElementById('chk-thpt').checked,
-
-                sat_target: document.getElementById('sat-target').value,
-                sat_math: document.getElementById('sat-math').value,
-                sat_verbal: document.getElementById('sat-verbal').value,
-
-                ielts_curr: document.getElementById('ielts-curr').value,
-                ielts_target: document.getElementById('ielts-target').value,
-                ielts_strong: document.getElementById('ielts-strong').value,
-                ielts_weak: document.getElementById('ielts-weak').value,
-
-                hsa_track: document.getElementById('hsa-track').value,
-                hsa_target: document.getElementById('hsa-target').value,
-                hsa_commit: document.getElementById('hsa-commit').value,
-                hsa_strong: document.getElementById('hsa-strong').value,
-                hsa_weak: document.getElementById('hsa-weak').value,
-
-                thpt_combo: document.getElementById('thpt-combo').value,
-                thpt_commit: document.getElementById('thpt-commit').value
+                has_thpt: document.getElementById('chk-thpt').checked
             };
 
             const { error } = await supabaseClient.from('profiles').upsert(profileData);
-            if (error) {
-                alert("Có lỗi khi lưu: " + error.message);
-            } else {
-                alert("Profile đã được lưu an toàn! 🎉");
-            }
+            if (error) alert("Có lỗi khi lưu: " + error.message);
+            else alert("Profile đã được lưu an toàn! 🎉");
         }
 
-        // --- HÀM TẢI HỒ SƠ TỪ SUPABASE ---
         async function loadProfile() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) return; 
 
-            const { data, error } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-
+            const { data } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
             if (data) {
-                // Không gán data.avatar cho value của thẻ input file nữa
                 document.getElementById('p-name').value = data.name || "";
-                document.getElementById('p-gender').value = data.gender || "";
-                document.getElementById('p-school').value = data.school || "";
-                document.getElementById('p-region').value = data.region || "";
-                document.getElementById('p-time').value = data.online_time || "";
-                
-                if(data.avatar) {
-                    document.getElementById('p-avatar-preview').src = data.avatar;
-                }
+                if(data.avatar) document.getElementById('p-avatar-preview').src = data.avatar;
 
                 document.getElementById('chk-sat').checked = data.has_sat || false;
                 document.getElementById('chk-ielts').checked = data.has_ielts || false;
@@ -919,24 +601,6 @@
                 toggleExam('box-ielts', document.getElementById('chk-ielts'));
                 toggleExam('box-hsa', document.getElementById('chk-hsa'));
                 toggleExam('box-thpt', document.getElementById('chk-thpt'));
-
-                document.getElementById('sat-target').value = data.sat_target || "";
-                document.getElementById('sat-math').value = data.sat_math || "";
-                document.getElementById('sat-verbal').value = data.sat_verbal || "";
-
-                document.getElementById('ielts-curr').value = data.ielts_curr || "";
-                document.getElementById('ielts-target').value = data.ielts_target || "";
-                document.getElementById('ielts-strong').value = data.ielts_strong || "";
-                document.getElementById('ielts-weak').value = data.ielts_weak || "";
-
-                document.getElementById('hsa-track').value = data.hsa_track || "";
-                document.getElementById('hsa-target').value = data.hsa_target || "";
-                document.getElementById('hsa-commit').value = data.hsa_commit || "";
-                document.getElementById('hsa-strong').value = data.hsa_strong || "";
-                document.getElementById('hsa-weak').value = data.hsa_weak || "";
-
-                document.getElementById('thpt-combo').value = data.thpt_combo || "";
-                document.getElementById('thpt-commit').value = data.thpt_commit || "";
             }
         }
 
@@ -951,18 +615,171 @@
             if(id === 'profile') document.querySelectorAll('.nav-item')[0].classList.add('active');
         }
 
-        // SỬA HÀM PREVIEW ĐỂ ĐỌC FILE TỪ MÁY
         function updateAvatarPreview() {
             const fileInput = document.getElementById('p-avatar');
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('p-avatar-preview').src = e.target.result;
-                }
+                reader.onload = function(e) { document.getElementById('p-avatar-preview').src = e.target.result; }
                 reader.readAsDataURL(fileInput.files[0]);
             }
         }
 
+        // --- ĐỔI BACKGROUND ---
+        function changeBg(id) { 
+            document.getElementById('bgFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&showinfo=0&rel=0&iv_load_policy=3&disablekb=1`; 
+        }
+
+
+        // ==========================================
+        //  CHỨC NĂNG MATCHING MVP (THAM LAM & RELAX)
+        // ==========================================
+
+        function openFilter() {
+            const examSelect = document.getElementById('f-exam');
+            examSelect.innerHTML = ''; 
+            let hasExam = false;
+
+            if (document.getElementById('chk-sat').checked) { examSelect.innerHTML += `<option value="SAT">SAT</option>`; hasExam = true; }
+            if (document.getElementById('chk-ielts').checked) { examSelect.innerHTML += `<option value="IELTS">IELTS</option>`; hasExam = true; }
+            if (document.getElementById('chk-hsa').checked) { examSelect.innerHTML += `<option value="HSA">HSA (ĐGNL ĐHQG)</option>`; hasExam = true; }
+            if (document.getElementById('chk-thpt').checked) { examSelect.innerHTML += `<option value="THPTQG">THPT Quốc Gia</option>`; hasExam = true; }
+
+            if (!hasExam) {
+                alert("Cậu chưa chọn Mục tiêu kỳ thi nào trong Profile cả! Hãy sang tab Hồ Sơ chọn trước nhé.");
+                showScreen('profile');
+                return;
+            }
+            document.getElementById('filterModal').style.display='flex';
+        }
+
+        let matchInterval; 
+        let myQueueId;     
+        let startTime;     
+
+        async function finishMatch() {
+            const exam = document.getElementById('f-exam').value; 
+            const size = parseInt(document.getElementById('f-size').value); 
+            const isRelax = document.getElementById('f-relax').checked; 
+            
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) { alert("Cậu cần Đăng nhập để tìm đồng đội!"); return; }
+
+            document.getElementById('filterModal').style.display='none';
+            document.getElementById('loadingOverlay').style.display='block';
+            document.getElementById('loadingText').innerText = "Đang đưa vào hàng chờ hệ thống...";
+
+            const { data, error } = await supabaseClient.from('match_queue').insert([{
+                user_id: user.id,
+                subject: exam, 
+                goal: isRelax ? 'relax' : 'strict',
+                team_size: size,
+                status: 'waiting'
+            }]).select().single();
+
+            if (error) { 
+                alert("Lỗi server: " + error.message); 
+                document.getElementById('loadingOverlay').style.display='none';
+                return; 
+            }
+            
+            myQueueId = data.id;
+            startTime = Date.now();
+
+            matchInterval = setInterval(() => processMatch(exam, size, isRelax), 3000);
+        }
+
+        async function processMatch(exam, size, isRelax) {
+            const { data: myRecord } = await supabaseClient.from('match_queue').select('*').eq('id', myQueueId).single();
+            if (myRecord && myRecord.status === 'matched') {
+                clearInterval(matchInterval);
+                enterRoom(exam, myRecord.room_id);
+                return;
+            }
+
+            const { data: waiters } = await supabaseClient.from('match_queue')
+                .select('*')
+                .eq('subject', exam)
+                .eq('status', 'waiting')
+                .order('created_at', { ascending: true }); 
+
+            if (!waiters || waiters.length === 0) return;
+
+            let waitTimeSeconds = (Date.now() - startTime) / 1000;
+            let validCandidates = [];
+
+            if (!isRelax) {
+                document.getElementById('loadingText').innerText = `Đang tìm đúng Team ${size} người thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
+                validCandidates = waiters.filter(w => w.team_size === size);
+                
+                if (validCandidates.length >= size) {
+                    executeMatch(exam, validCandidates.slice(0, size));
+                }
+            } else {
+                document.getElementById('loadingText').innerText = `[Relax] Đang vơ vét đồng đội thi ${exam}... (${Math.floor(waitTimeSeconds)}s)`;
+                validCandidates = waiters; 
+
+                if (validCandidates.length >= 2) {
+                    const actualSize = Math.min(validCandidates.length, size);
+                    executeMatch(exam, validCandidates.slice(0, actualSize));
+                }
+            }
+        }
+
+        async function executeMatch(exam, teamMembers) {
+            const teamIds = teamMembers.map(t => t.id);
+            const roomId = "StudyCrush-Room-" + Math.random().toString(36).substr(2, 9);
+
+            const { error } = await supabaseClient.from('match_queue')
+                .update({ status: 'matched', room_id: roomId })
+                .in('id', teamIds);
+
+            if (!error) {
+                clearInterval(matchInterval);
+                enterRoom(exam, roomId);
+            }
+        }
+
+        function enterRoom(subject, roomId) {
+            document.getElementById('loadingOverlay').style.display='none';
+            document.getElementById('lobby').classList.remove('active');
+            document.getElementById('team').classList.add('active');
+            document.getElementById('teamNav').style.display = 'flex';
+            document.getElementById('teamNav').classList.add('active');
+            
+            updateTeamUI(roomId); 
+            
+            const box = document.getElementById('teamChatBox');
+            box.innerHTML += `<p style="color: #2ecc71; font-size: 13px; margin-top:5px;"><b>System:</b> Đã kết nối phòng ${subject} thành công! Mọi người đã có thể bật Mic/Cam nhé.</p>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function updateTeamUI(roomId) {
+            const grid = document.getElementById('videoGrid');
+            const userName = document.getElementById('p-name').value || 'Sinh viên FTU';
+            const encodedName = encodeURIComponent(userName);
+
+            const miroUrl = `https://p2p.mirotalk.com/join/${roomId}?name=${encodedName}`;
+
+            grid.innerHTML = `
+                <iframe 
+                    allow="camera; microphone; display-capture; fullscreen; clipboard-read; clipboard-write; autoplay"
+                    src="${miroUrl}" 
+                    style="width: 100%; height: 100%; border: none;">
+                </iframe>
+            `;
+        }
+
+        function leaveRoom() {
+            // Khi rời phòng, xóa sạch iframe đi để ngắt kết nối Camera/Mic của MiroTalk
+            document.getElementById('videoGrid').innerHTML = '';
+            document.getElementById('teamNav').style.display = 'none';
+            showScreen('lobby');
+        }
+
+
+        // ==========================================
+        //  CÁC TÍNH NĂNG POMODORO & CHAT
+        // ==========================================
         let timerInterval;
         let isTimerRunning = false;
         let defaultWork = 50;
@@ -1000,18 +817,12 @@
                 const betVal = parseInt(document.getElementById(betInputId).value) || 0;
                 
                 if(betVal > 0) {
-                    if(betVal > spoints) {
-                        alert("Không đủ S.Points để cược!");
-                        return;
-                    }
+                    if(betVal > spoints) { alert("Không đủ S.Points để cược!"); return; }
                     if(confirm(`Bạn có chắc muốn cược ${betVal} SP?\nThắng: +${betVal*2} SP\nThua/Reset: Mất trắng.`)) {
-                        spoints -= betVal;
-                        currentBet = betVal;
-                        updateCurrencyUI();
+                        spoints -= betVal; currentBet = betVal;
+                        document.getElementById('sp-display').innerText = spoints;
                         document.getElementById(betInputId).disabled = true;
-                    } else {
-                        return; 
-                    }
+                    } else { return; }
                 }
             }
 
@@ -1034,7 +845,7 @@
                 if(currentBet > 0) {
                     const winAmount = currentBet * 2;
                     spoints += winAmount;
-                    alert(`🎉 CHÚC MỪNG!\nBạn đã hoàn thành phiên học.\nNhận lại: ${winAmount} S.Points (Gấp đôi)`);
+                    alert(`🎉 CHÚC MỪNG!\nBạn đã hoàn thành phiên học.\nNhận lại: ${winAmount} S.Points`);
                     currentBet = 0;
                     document.getElementById('soloBetInput').value = "";
                     document.getElementById('teamBetInput').value = "";
@@ -1051,7 +862,7 @@
                 timeLeft = defaultWork * 60;
                 alert("⏰ HẾT GIỜ NGHỈ!\nQuay lại bàn học nào!");
             }
-            updateCurrencyUI();
+            document.getElementById('sp-display').innerText = spoints;
             updateTimerUI();
             document.getElementById('btnStartTimer').innerText = "START NEXT";
             document.getElementById('btnStartTimer').style.background = "";
@@ -1059,9 +870,7 @@
 
         function resetTimer() {
             if(currentBet > 0) {
-                if(!confirm("⚠️ CẢNH BÁO:\nBạn đang trong phiên cược!\nReset bây giờ sẽ mất toàn bộ số điểm đã cược.\nBạn chắc chắn chứ?")) {
-                    return;
-                }
+                if(!confirm("⚠️ CẢNH BÁO:\nBạn đang trong phiên cược!\nReset bây giờ sẽ mất toàn bộ số điểm đã cược.\nBạn chắc chắn chứ?")) return;
                 alert(`💔 Bạn đã bỏ cuộc!\nMất ${currentBet} S.Points.`);
                 currentBet = 0;
                 document.getElementById('soloBetInput').value = "";
@@ -1087,148 +896,13 @@
             const w = parseInt(document.getElementById('setWork').value);
             const b = parseInt(document.getElementById('setBreak').value);
             if(w > 0 && b > 0) {
-                defaultWork = w;
-                defaultBreak = b;
+                defaultWork = w; defaultBreak = b;
                 alert(`Đã lưu: ${w}p Học / ${b}p Nghỉ`);
-                toggleSettings(); 
-                resetTimer(); 
-            } else {
-                alert("Thời gian phải lớn hơn 0!");
-            }
-        }
-
-        function buyItem(name, cost, type, action) {
-            let current = type === 'point' ? spoints : pennies;
-            let currencyName = type === 'point' ? 'S.Point' : 'Pen';
-            if(current >= cost) {
-                if(confirm(`Mua "${name}" với giá ${cost} ${currencyName}?`)) {
-                    if(type === 'point') spoints -= cost; else pennies -= cost;
-                    updateCurrencyUI();
-                    if(action === 'activate') {
-                        isPremium = true;
-                        document.getElementById('premium-badge').style.display = 'flex';
-                        alert("🎉 CHÚC MỪNG! PREMIUM ĐĐ KÍCH HOẠT!");
-                    } else {
-                        alert(`Đã mua ${name} thành công!`);
-                    }
-                }
-            } else {
-                alert(`Không đủ tiền! Cần thêm ${cost - current} ${currencyName}.`);
-            }
-        }
-
-        function buyBackground(id, name) {
-            if(spoints >= 200) {
-                if(confirm(`Mua background "${name}" (200 SP)?`)) {
-                    spoints -= 200;
-                    updateCurrencyUI();
-                    changeBg(id);
-                    alert(`Đã đổi không gian: ${name}`);
-                }
-            } else {
-                alert("Thiếu S.Point (Cần 200)!");
-            }
-        }
-
-        function updateCurrencyUI() {
-            document.getElementById('sp-display').innerText = spoints;
-            document.getElementById('pen-display').innerText = pennies;
-        }
-
-        function changeBg(id) { 
-            document.getElementById('bgFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&showinfo=0&rel=0&iv_load_policy=3&disablekb=1`; 
-        }
-
-        function openFilter() { document.getElementById('filterModal').style.display='flex'; }
-
-        function finishMatch() {
-            const subject = document.getElementById('f-subject').value;
-            const size = document.getElementById('f-size').value;
-            const goal = document.getElementById('f-goal').value;
-            document.getElementById('filterModal').style.display='none';
-            document.getElementById('loadingOverlay').style.display='block';
-            let steps = ["Đang kết nối máy chủ...", `Đang tìm Team ${size} người...`, `Lọc ứng viên môn ${subject}...`, "Đang ghép nối..."];
-            let i = 0;
-            const interval = setInterval(() => {
-                if(i < steps.length) {
-                    document.getElementById('loadingText').innerText = steps[i];
-                    i++;
-                }
-            }, 700);
-            setTimeout(() => {
-                clearInterval(interval);
-                document.getElementById('loadingOverlay').style.display='none';
-                document.getElementById('lobby').classList.remove('active');
-                document.getElementById('team').classList.add('active');
-                document.getElementById('teamNav').style.display = 'flex';
-                document.getElementById('teamNav').classList.add('active');
-                updateTeamUI(size);
-                alert(`Match thành công!\nTeam: ${size} người\nMôn: ${subject}\nMục tiêu: ${goal}`);
-            }, 3000);
-        }
-
-        function updateTeamUI(size) {
-            const grid = document.getElementById('videoGrid');
-            grid.innerHTML = ''; 
-            
-            grid.innerHTML += `
-                <div style="aspect-ratio: 16/9; background: #000; border-radius: 10px; border: 2px solid white; position: relative; overflow: hidden;">
-                    <video id="localVideo" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
-                    <span style="position: absolute; bottom: 5px; left: 10px; z-index:2; text-shadow: 0 0 5px black;">You (Cam On)</span>
-                </div>`;
-            startWebcam();
-
-            const partnerVideos = [
-                'Hpfl1iNOd48', '-GcDrDeth1E', 'ctqo0WLzgoM', 'ADB-tGLvmB8', '1ziSDBlK5lY'
-            ];
-            partnerVideos.sort(() => Math.random() - 0.5);
-
-            for(let i=1; i < size; i++) {
-                const vidId = partnerVideos[i % partnerVideos.length];
-                const connId = `conn-${i}`;
-                
-                grid.innerHTML += `
-                    <div style="aspect-ratio: 16/9; background: rgba(0,0,0,0.5); border-radius: 10px; border: 2px solid var(--primary); position: relative; overflow: hidden;">
-                        <div class="conn-loader" id="${connId}">
-                            <div class="radar"></div>
-                            <p>CONNECTING PEER...</p>
-                        </div>
-                        <iframe src="https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${vidId}&showinfo=0&rel=0" 
-                            style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media"></iframe>
-                        <span style="position: absolute; bottom: 5px; left: 10px; background: rgba(0,0,0,0.6); padding: 2px 8px; border-radius: 4px; z-index: 6;">Partner ${i}</span>
-                    </div>
-                `;
-                
-                setTimeout(() => {
-                    const loader = document.getElementById(connId);
-                    if(loader) loader.style.display = 'none';
-                }, 4000);
-            }
-            if(size > 2) grid.style.gridTemplateColumns = "1fr 1fr";
-            else grid.style.gridTemplateColumns = "1fr 1fr"; 
-        }
-
-        function startWebcam() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-                    .then(function(stream) {
-                        const videoElement = document.getElementById('localVideo');
-                        if (videoElement) { videoElement.srcObject = stream; }
-                    })
-                    .catch(function(error) {
-                        const videoElement = document.getElementById('localVideo');
-                        if (videoElement) {
-                            videoElement.parentElement.innerHTML += '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#333;">Camera Off</div>';
-                        }
-                    });
-            }
+                toggleSettings(); resetTimer(); 
+            } else { alert("Thời gian phải lớn hơn 0!"); }
         }
 
         function toggleChat() {
-            if(!isPremium) {
-                alert("⚠️ TÍNH NĂNG CAO CẤP!\nCần gói Premium để dùng AI.\nVào Shop mua gói dùng thử 5000 SP nhé!");
-                return;
-            }
             const box = document.getElementById('aiChat');
             box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
         }
@@ -1251,13 +925,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: [{ parts: [{ text: txt }] }],
-                        systemInstruction: { parts: [{ text: "Bạn là Gemini AI Tutor, một trợ lý học tập thân thiện trên nền tảng StudyCrush. Hãy trả lời ngắn gọn, súc tích, vui vẻ và tập trung vào việc giúp người dùng học tập hiệu quả. Dùng tiếng Việt." }] },
-                        safetySettings: [
-                            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-                            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-                            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-                            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-                        ]
+                        systemInstruction: { parts: [{ text: "Bạn là Gemini AI Tutor trên nền tảng StudyCrush. Trả lời ngắn gọn bằng tiếng Việt." }] },
                     })
                 });
                 const data = await response.json();
@@ -1265,50 +933,9 @@
                 if (data.candidates && data.candidates[0].content) {
                     const reply = data.candidates[0].content.parts[0].text;
                     chatBody.innerHTML += `<div class="msg ai" style="margin-top:5px;">${reply}</div>`;
-                } else {
-                    chatBody.innerHTML += `<div class="msg ai error" style="margin-top:5px;">AI bị lỗi nhẹ. Thử lại nha!</div>`;
                 }
-            } catch (e) {
-                if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-                chatBody.innerHTML += `<div class="msg ai error" style="margin-top:5px;">Lỗi mạng rồi!</div>`;
-            }
+            } catch (e) { document.getElementById(loadingId).remove(); }
             chatBody.scrollTop = chatBody.scrollHeight;
-        }
-
-        async function sendTeamMsg(inputElement) {
-            const txt = inputElement.value.trim();
-            if(!txt) return;
-            const box = document.getElementById('teamChatBox');
-            box.innerHTML += `<p style="color: white; font-size: 13px; margin-top:5px;"><b>You:</b> ${txt}</p>`;
-            inputElement.value = '';
-            box.scrollTop = box.scrollHeight;
-            setTimeout(async () => {
-                try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: txt }] }],
-                            systemInstruction: { parts: [{ text: "Bạn là một sinh viên FTU đang học cùng nhóm online trên StudyCrush. Bạn tên là Partner 1. Hãy trả lời tin nhắn của bạn cùng nhóm một cách tự nhiên, thân thiện, như bạn bè đồng trang lứa. Đôi khi dùng teencode hoặc icon. Ngắn gọn thôi." }] }
-                        })
-                    });
-                    const data = await response.json();
-                    if (data.candidates && data.candidates[0].content) {
-                        const reply = data.candidates[0].content.parts[0].text;
-                        box.innerHTML += `<p style="color: #aaa; font-size: 13px; margin-top:5px;"><b>Partner 1:</b> ${reply}</p>`;
-                        box.scrollTop = box.scrollHeight;
-                    }
-                } catch (e) { console.error("Team AI Error"); }
-            }, 1000 + Math.random() * 2000);
-        }
-
-        function playMusic() {
-            const url = document.getElementById('musicLink').value;
-            let id = "";
-            if (url.includes("v=")) id = url.split("v=")[1].split("&")[0];
-            else if (url.includes("youtu.be/")) id = url.split("youtu.be/")[1];
-            if (id) document.getElementById('musicFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
         }
     </script>
 </body>
