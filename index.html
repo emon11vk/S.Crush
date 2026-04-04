@@ -238,7 +238,7 @@
             <div class="nav-item" onclick="showScreen('profile')"><i class="fas fa-id-card" style="font-size: 24px;"></i> <span class="nav-label">Hồ Sơ</span></div>
             <div class="nav-item" onclick="showScreen('solo')"><i class="fas fa-user" style="font-size: 24px;"></i> <span class="nav-label">Solo</span></div>
             <div class="nav-item active" onclick="showScreen('lobby')"><i class="fas fa-users" style="font-size: 24px;"></i> <span class="nav-label">Sảnh</span></div>
-            
+            <div class="nav-item" onclick="showScreen('rooms')"><i class="fas fa-door-open" style="font-size: 24px;"></i> <span class="nav-label">Phòng</span></div>
             <div class="nav-item" id="teamNav" style="display:none" onclick="showScreen('team')"><i class="fas fa-video" style="font-size: 24px;"></i> <span class="nav-label">Team</span></div>
 
             <div class="nav-item" onclick="showScreen('shop')"><i class="fas fa-shopping-bag" style="font-size: 24px;"></i> <span class="nav-label">Shop</span></div>
@@ -358,6 +358,15 @@
                     <button class="buy-btn" onclick="openFilter()" style="width: auto; padding: 25px 80px; font-size: 28px; border-radius: 60px; animation: pulse 2s infinite; border: 4px solid white; box-shadow: 0 0 50px rgba(255,158,181,0.5);">
                         <i class="fas fa-search"></i> TÌM MATCH
                     </button>
+                </div>
+            </div>
+
+            <div id="rooms" class="screen">
+                <div class="panel" style="max-width: 800px; margin: 30px auto; padding: 40px;">
+                    <h2 style="text-align:center; margin-bottom: 20px; font-family: 'VT323'; font-size: 50px; color: var(--primary);">LỊCH SỬ PHÒNG</h2>
+                    <p style="text-align:center; margin-bottom: 30px; color: #aaa;">Xem lại tin nhắn hoặc hội ngộ cùng đồng đội cũ!</p>
+                    <div id="roomList" style="display: flex; flex-direction: column; gap: 15px;">
+                        </div>
                 </div>
             </div>
 
@@ -632,6 +641,8 @@
         let spoints = 999999;
         let pennies = 999999;
         let currentBet = 0; 
+        let currentRoomId = null;
+        let chatSubscription = null;
         
         window.onload = async function() {
             const videos = ['9kzE8isXlQY','l-2hOKIrIyI','vCTRNKPJr40','dCQ8GYqVKdc'];
@@ -783,9 +794,14 @@
             
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if(id === 'lobby') document.querySelectorAll('.nav-item')[2].classList.add('active');
+            if(id === 'rooms') document.querySelectorAll('.nav-item')[3].classList.add('active');
             if(id === 'solo') document.querySelectorAll('.nav-item')[1].classList.add('active');
-            if(id === 'shop') document.querySelectorAll('.nav-item')[4].classList.add('active');
+            if(id === 'shop') document.querySelectorAll('.nav-item')[5].classList.add('active');
             if(id === 'profile') document.querySelectorAll('.nav-item')[0].classList.add('active');
+
+            if(id === 'rooms') {
+                loadMyRooms();
+            }
         }
 
         function updateAvatarPreview() {
@@ -957,18 +973,51 @@
             }
         }
 
-        function enterRoom(subject, roomId) {
+        async function enterRoom(subject, roomId) {
+            currentRoomId = roomId; 
+            
             document.getElementById('matchWidget').style.display='none';
-            document.getElementById('lobby').classList.remove('active');
+            
+            // Fix 1: Xóa active tất cả các màn hình và menu để tránh lỗi đè UI nếu match lúc đang ở Shop/Profile
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('team').classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('teamNav').style.display = 'flex';
             document.getElementById('teamNav').classList.add('active');
             
             updateTeamUI(roomId); 
             
             const box = document.getElementById('teamChatBox');
-            box.innerHTML += `<p style="color: #2ecc71; font-size: 13px; margin-top:5px;"><b>System:</b> Đã kết nối phòng ${subject} thành công! Mọi người đã có thể bật Mic/Cam nhé.</p>`;
+            box.innerHTML = ''; // Làm sạch khung chat
+            
+            // Fix 2: Tải lịch sử chat xong mới in ra thông báo System để chat không bị ngược thứ tự
+            await loadRoomChat(roomId);
+            box.innerHTML += `<p style="color: #2ecc71; font-size: 13px; margin-top: 10px; margin-bottom: 10px;"><b>System:</b> Đã kết nối phòng ${subject} thành công! Mọi người đã có thể bật Mic/Cam nhé.</p>`;
             box.scrollTop = box.scrollHeight;
+            
+            subscribeToRoomChat(roomId);
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (user) {
+                await supabaseClient.from('room_history').upsert({
+                    user_id: user.id,
+                    room_id: roomId,
+                    subject: subject
+                }, { onConflict: 'user_id, room_id' });
+            }
+        }
+
+        function leaveRoom() {
+            if (chatSubscription) {
+                supabaseClient.removeChannel(chatSubscription);
+                chatSubscription = null;
+            }
+            currentRoomId = null;
+
+            document.getElementById('videoGrid').innerHTML = '';
+            document.getElementById('teamNav').style.display = 'none';
+            showScreen('lobby');
         }
 
         async function cancelMatch() {
@@ -995,13 +1044,6 @@
                 </iframe>
             `;
         }
-
-        function leaveRoom() {
-            document.getElementById('videoGrid').innerHTML = '';
-            document.getElementById('teamNav').style.display = 'none';
-            showScreen('lobby');
-        }
-
 
         // ==========================================
         //  CÁC TÍNH NĂNG POMODORO & CHAT
@@ -1162,6 +1204,95 @@
                 }
             } catch (e) { document.getElementById(loadingId).remove(); }
             chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function sendTeamMsg(input) {
+            const txt = input.value.trim();
+            if (!txt || !currentRoomId) return;
+
+            input.value = ''; 
+
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return;
+
+            const userName = document.getElementById('p-name').value || 'Thành viên ẩn danh';
+
+            const { error } = await supabaseClient.from('room_chats').insert([{
+                room_id: currentRoomId,
+                user_id: user.id,
+                user_name: userName,
+                message: txt
+            }]);
+
+            if (error) console.error("Lỗi gửi tin nhắn:", error);
+        }
+
+        async function loadRoomChat(roomId) {
+            const box = document.getElementById('teamChatBox');
+            
+            const { data, error } = await supabaseClient.from('room_chats')
+                .select('*')
+                .eq('room_id', roomId)
+                .order('created_at', { ascending: true });
+
+            if (data && data.length > 0) {
+                data.forEach(msg => {
+                    const isMe = msg.user_name === (document.getElementById('p-name').value || 'Thành viên ẩn danh');
+                    const color = isMe ? 'var(--primary)' : '#00d2d3';
+                    box.innerHTML += `<p style="font-size: 14px; margin-bottom: 5px; line-height: 1.4;"><b style="color:${color}">${msg.user_name}:</b> <span style="color:white">${msg.message}</span></p>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        function subscribeToRoomChat(roomId) {
+            chatSubscription = supabaseClient.channel(`room-chat-${roomId}`)
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'room_chats', filter: `room_id=eq.${roomId}` },
+                    (payload) => {
+                        const msg = payload.new;
+                        const box = document.getElementById('teamChatBox');
+                        const myName = document.getElementById('p-name').value || 'Thành viên ẩn danh';
+                        const color = msg.user_name === myName ? 'var(--primary)' : '#00d2d3';
+                        
+                        box.innerHTML += `<p style="font-size: 14px; margin-bottom: 5px; line-height: 1.4;"><b style="color:${color}">${msg.user_name}:</b> <span style="color:white">${msg.message}</span></p>`;
+                        box.scrollTop = box.scrollHeight;
+                    }
+                ).subscribe();
+        }
+
+        async function loadMyRooms() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return;
+
+            const roomListDiv = document.getElementById('roomList');
+            roomListDiv.innerHTML = '<p style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> Đang tải lịch sử...</p>';
+
+            const { data, error } = await supabaseClient.from('room_history')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (error || !data || data.length === 0) {
+                roomListDiv.innerHTML = '<p style="text-align:center; color: #aaa;">Cậu chưa tham gia phòng nào cả. Ra sảnh tìm đồng đội thôi!</p>';
+                return;
+            }
+
+            roomListDiv.innerHTML = '';
+            data.forEach(room => {
+                const date = new Date(room.created_at).toLocaleString('vi-VN');
+                roomListDiv.innerHTML += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
+                        <div>
+                            <h4 style="color: var(--primary); margin-bottom: 5px; font-size: 18px;"><i class="fas fa-hashtag"></i> Topic: ${room.subject}</h4>
+                            <p style="font-size: 13px; color: #aaa;"><i class="far fa-clock"></i> Lần đầu vào: ${date}</p>
+                        </div>
+                        <button class="buy-btn" style="width: auto; padding: 10px 20px; font-size: 14px;" onclick="enterRoom('${room.subject}', '${room.room_id}')">
+                            <i class="fas fa-sign-in-alt"></i> Vào Lại
+                        </button>
+                    </div>
+                `;
+            });
         }
     </script>
 </body>
